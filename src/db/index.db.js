@@ -1,23 +1,34 @@
-const { db } = require('../config/index.config')
-const mysql = require('mysql2')
+const path = require("path")
 
-/* 
-const mysqlUri = `mysql://${db.dbUser}:${db.dbPass}@${db.dbHost}:${db.dbPort}/${db.dbName}`; 
-*/
-const mysqlConnection = mysql.createConnection({
-  user: db.dbUser,
-  password: db.dbPass,
-  host: db.dbHost,
-  port: db.dbPort,
-  database: db.dbName
-})
-
-mysqlConnection.connect((error) => {
-  if (error) {
-    return console.log(error)
+const multer = require("multer")
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, path.join(__dirname, "../../public/uploads"))
+  },
+  filename: (req, file, callback) => {
+    callback(null, Date.now() + path.extname(file.originalname))
   }
-
-  console.log(`Base de datos conectada en el puerto ${db.dbPort}`)
 })
 
-module.exports = mysqlConnection
+const upload = multer({
+  storage,
+  fileFilter: (req, file, callback) => {
+    const fileTypes = /jpeg|jpg|png/
+    const mimeType = fileTypes.test(file.mimetype)
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
+
+    if(mimeType && extname) {
+      return callback(null, true)
+    }
+
+    callback("Error: tipo de archivo no soportado")
+  },
+  limits: { fieldSize: 1024 * 1024 * 1 }
+})
+
+const uploadPath = path.join(__dirname, "../../public/uploads");
+
+module.exports = {
+  upload,
+  uploadPath
+}
