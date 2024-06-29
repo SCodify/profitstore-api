@@ -1,34 +1,33 @@
-const path = require("path")
+const { db } = require('../config/index.config')
+const mysql = require('mysql2/promise');
 
-const multer = require("multer")
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, path.join(__dirname, "../../public/uploads"))
-  },
-  filename: (req, file, callback) => {
-    callback(null, Date.now() + path.extname(file.originalname))
+/* 
+const mysqlUri = `mysql://${db.dbUser}:${db.dbPass}@${db.dbHost}:${db.dbPort}/${db.dbName}`; 
+*/
+
+const pool = mysql.createPool({
+  user: db.dbUser,
+  password: db.dbPass,
+  host: db.dbHost,
+  port: db.dbPort,
+  database: db.dbName,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+})
+
+// Función para probar la conexión
+const testConnection = async () => {
+  try {
+    const connection = await pool.getConnection();
+    console.log(`Base de datos conectada en el puerto ${db.dbPort}`);
+    connection.release();
+  } catch (error) {
+    console.error('Error al conectar con la base de datos:', error);
   }
-})
+};
 
-const upload = multer({
-  storage,
-  fileFilter: (req, file, callback) => {
-    const fileTypes = /jpeg|jpg|png/
-    const mimeType = fileTypes.test(file.mimetype)
-    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
+// Ejecutar la prueba de conexión
+testConnection();
 
-    if(mimeType && extname) {
-      return callback(null, true)
-    }
-
-    callback("Error: tipo de archivo no soportado")
-  },
-  limits: { fieldSize: 1024 * 1024 * 1 }
-})
-
-const uploadPath = path.join(__dirname, "../../public/uploads");
-
-module.exports = {
-  upload,
-  uploadPath
-}
+module.exports = pool;
