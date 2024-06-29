@@ -1,7 +1,7 @@
-const testRouter = require('./test.router.js')
+const productosRouter = require('./productos.router.js')
 
 const router = (app) => {
-  app.use('/api/test', testRouter)
+  app.use('/api/productos', productosRouter)
 }
 
 module.exports = router
