@@ -117,6 +117,51 @@ const productosModel = {
           throw error;
         }
       },
+      deleteProductImage: async (pid) => {
+        try {
+          await pool.query('START TRANSACTION');
+    
+          // Obtener la URL de la imagen actual
+          const [imageResult] = await pool.query('SELECT url FROM imagenes WHERE producto_id = ?', [pid]);
+    
+          if (imageResult.length === 0) {
+            // No hay imagen para este producto
+            await pool.query('COMMIT');
+            return null;
+          }
+    
+          const imageUrl = imageResult[0].url;
+    
+          // Eliminar la entrada de la imagen en la base de datos
+          await pool.query('DELETE FROM imagenes WHERE producto_id = ?', [pid]);
+    
+          await pool.query('COMMIT');
+          return imageUrl;
+        } catch (error) {
+          await pool.query('ROLLBACK');
+          console.error('Error en deleteProductImage:', error);
+          throw error;
+        }
+      },
+    
+      deleteProducto: async (pid) => {
+        try {
+          // Eliminar los detalles del producto
+          await pool.query('DELETE FROM detalles_producto WHERE producto_id = ?', [pid]);
+    
+          // Eliminar las imágenes del producto
+          await pool.query('DELETE FROM imagenes WHERE producto_id = ?', [pid]);
+    
+          // Eliminar el producto
+          const [result] = await pool.query('DELETE FROM productos WHERE id = ?', [pid]);
+    
+          // Retornar true si se eliminó algún producto, false en caso contrario
+          return result.affectedRows > 0;
+        } catch (error) {
+          console.error('Error en deleteProducto:', error);
+          throw error;
+        }
+      }
 };
 
 module.exports = productosModel;
