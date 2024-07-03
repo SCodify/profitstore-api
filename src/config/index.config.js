@@ -8,5 +8,9 @@ module.exports = {
     dbPass: process.env.DB_PASS,
     dbName: process.env.DB_NAME,
     dbPort: process.env.DB_PORT,
+  },
+  auth: {
+    secretKey: process.env.SECRET_KEY,
+    tokenExpiresIn: process.env.TOKEN_EXPIRATION
   }
 }
