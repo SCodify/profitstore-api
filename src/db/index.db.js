@@ -1,10 +1,6 @@
 const { db } = require('../config/index.config')
 const mysql = require('mysql2/promise');
 
-/* 
-const mysqlUri = `mysql://${db.dbUser}:${db.dbPass}@${db.dbHost}:${db.dbPort}/${db.dbName}`; 
-*/
-
 const pool = mysql.createPool({
   user: db.dbUser,
   password: db.dbPass,
@@ -16,7 +12,6 @@ const pool = mysql.createPool({
   queueLimit: 0
 })
 
-// Función para probar la conexión
 const testConnection = async () => {
   try {
     const connection = await pool.getConnection();
@@ -27,7 +22,6 @@ const testConnection = async () => {
   }
 };
 
-// Ejecutar la prueba de conexión
 testConnection();
 
 module.exports = pool;
