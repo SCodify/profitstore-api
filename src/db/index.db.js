@@ -1,23 +1,27 @@
 const { db } = require('../config/index.config')
-const mysql = require('mysql2')
+const mysql = require('mysql2/promise');
 
-/* 
-const mysqlUri = `mysql://${db.dbUser}:${db.dbPass}@${db.dbHost}:${db.dbPort}/${db.dbName}`; 
-*/
-const mysqlConnection = mysql.createConnection({
+const pool = mysql.createPool({
   user: db.dbUser,
   password: db.dbPass,
   host: db.dbHost,
   port: db.dbPort,
-  database: db.dbName
+  database: db.dbName,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 })
 
-mysqlConnection.connect((error) => {
-  if (error) {
-    return console.log(error)
+const testConnection = async () => {
+  try {
+    const connection = await pool.getConnection();
+    console.log(`Base de datos conectada en el puerto ${db.dbPort}`);
+    connection.release();
+  } catch (error) {
+    console.error('Error al conectar con la base de datos:', error);
   }
+};
 
-  console.log(`Base de datos conectada en el puerto ${db.dbPort}`)
-})
+testConnection();
 
-module.exports = mysqlConnection
+module.exports = pool;
