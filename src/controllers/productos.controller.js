@@ -165,7 +165,7 @@ const productoController = {
       next(error);
     }
   },
-
+  
   updateDetalleProducto: async (req, res, next) => {
     const { pid, clave } = req.params;
     const { valor } = req.body;
@@ -180,7 +180,7 @@ const productoController = {
       next(error);
     }
   },
-
+  
   deleteDetalleProducto: async (req, res, next) => {
     const { pid, clave } = req.params;
     try {
