@@ -108,13 +108,6 @@ INSERT INTO productos (nombre, descrip, precio, categoria_id, marca_id) VALUES
 ('Muñequeras', 'Muñequeras absorbentes para mayor comodidad.', 12.00, 2, 2),
 ('Zapatillas de Entrenamiento', 'Zapatillas diseñadas para un mejor rendimiento.', 79.99, 1, 1);
 
-INSERT INTO imagenes (producto_id, url) VALUES 
-(1, 'http://example.com/images/camiseta_deportiva.jpg'),
-(2, 'http://example.com/images/pantalones_cortos.jpg'),
-(3, 'http://example.com/images/botella_agua.jpg'),
-(4, 'http://example.com/images/muñequeras.jpg'),
-(5, 'http://example.com/images/zapatillas_entrenamiento.jpg');
-
 INSERT INTO detalles_producto (producto_id, clave, valor) VALUES 
 (1, 'tamaño', 'M'),
 (1, 'color', 'Negro'),
