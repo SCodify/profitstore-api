@@ -2,19 +2,16 @@ CREATE DATABASE IF NOT EXISTS scodify_profitstore;
 
 USE scodify_profitstore;
 
--- Crear la tabla categorias
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL
 );
 
--- Crear la tabla marcas
 CREATE TABLE marcas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL
 );
 
--- Crear la tabla productos
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
@@ -26,7 +23,6 @@ CREATE TABLE productos (
     FOREIGN KEY (marca_id) REFERENCES marcas(id)
 );
 
--- Crear la tabla imagenes
 CREATE TABLE imagenes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     producto_id INT,
@@ -34,7 +30,6 @@ CREATE TABLE imagenes (
     FOREIGN KEY (producto_id) REFERENCES productos(id)
 );
 
--- Crear la tabla detalles_producto
 CREATE TABLE detalles_producto (
     id INT AUTO_INCREMENT PRIMARY KEY,
     producto_id INT,
@@ -49,17 +44,22 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL
 );
 
--- Insertar categorías
+CREATE TABLE revoked_tokens (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  token VARCHAR(255) NOT NULL,
+  expiration TIMESTAMP NOT NULL
+);
+
+DROP TABLE revoked_tokens;
+
 INSERT INTO categorias (nombre) VALUES 
 ('Ropa'),
 ('Accesorios');
 
--- Insertar marcas
 INSERT INTO marcas (nombre) VALUES 
 ('Nike'),
 ('Adidas');
 
--- Insertar productos
 INSERT INTO productos (nombre, descrip, precio, categoria_id, marca_id) VALUES 
 ('Camiseta Deportiva', 'Camiseta transpirable para entrenamientos intensos.', 25.99, 1, 1),
 ('Pantalones Cortos', 'Pantalones cortos cómodos y ligeros.', 29.99, 1, 2),
@@ -67,15 +67,6 @@ INSERT INTO productos (nombre, descrip, precio, categoria_id, marca_id) VALUES
 ('Muñequeras', 'Muñequeras absorbentes para mayor comodidad.', 12.00, 2, 2),
 ('Zapatillas de Entrenamiento', 'Zapatillas diseñadas para un mejor rendimiento.', 79.99, 1, 1);
 
--- Insertar imágenes
-INSERT INTO imagenes (producto_id, url) VALUES 
-(1, 'https://raw.githubusercontent.com/SCodify/profitstore/main/src/image/img2.png'),
-(2, 'https://raw.githubusercontent.com/SCodify/profitstore/main/src/image/img3.png'),
-(3, 'https://raw.githubusercontent.com/SCodify/profitstore/main/src/image/img4.png'),
-(4, 'https://raw.githubusercontent.com/SCodify/profitstore/main/src/image/img5.png'),
-(5, 'https://raw.githubusercontent.com/SCodify/profitstore/main/src/image/img6.png');
-
--- Insertar detalles del producto
 INSERT INTO detalles_producto (producto_id, clave, valor) VALUES 
 (1, 'tamaño', 'M'),
 (1, 'color', 'Negro'),

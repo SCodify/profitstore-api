@@ -3,8 +3,9 @@ const bcrypt = require("bcryptjs")
 
 const { auth } = require('../config/index.config')
 const userModel = require("../models/user.model")
+const authModel = require("../models/auth.model")
 
-const userController = {
+const authController = {
   register: async (req, res) => {
     try {
       const { username, password } = req.body
@@ -78,7 +79,25 @@ const userController = {
         error: error.message
       })
     }
+  },
+
+  revokeToken: async (req, res) => {
+    try {
+      const token = req.header('Authorization').replace('Bearer ', '');
+      
+      await authModel.insertRevokedToken(token);
+      
+      res.status(200).json({
+        auth: false,
+        message: 'Logout exitoso'
+      });
+    } catch (error) {
+      console.error('Error al revocar el token:', error);
+      res.status(500).json({
+        message: 'Error al revocar el token'
+      });
+    }
   }
 }
 
-module.exports = userController
+module.exports = authController

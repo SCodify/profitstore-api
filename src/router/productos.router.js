@@ -18,6 +18,7 @@ router.put('/detalles/:pid/:clave', authentication, productosController.updateDe
 router.delete('/detalles/:pid/:clave', authentication, productosController.deleteDetalleProducto);
 
 router.delete('/imagen/:pid', authentication, productosController.deleteProductImage);
+
 router.delete('/:pid', authentication, productosController.deleteProducto)
 
 module.exports = router

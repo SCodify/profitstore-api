@@ -18,11 +18,19 @@ const authentication = async (req, res, next) => {
   if (!token) {
     return res.status(403).json({
       auth: false,
-      message: "Token Malformado"
+      message: "Token malformado"
     })
   }
 
   try {
+    const revokedTokens = await authModel.checkRevokedToken(token);
+    if (revokedTokens.length > 0) {
+      return res.status(401).json({
+        auth: false,
+        message: 'Token revocado'
+      });
+    }
+
     const decoded = jwt.verify(token, auth.secretKey)
     const user = await userModel.findById(decoded.id)
     if (!user) {
